@@ -2,11 +2,10 @@ using Moq;
 using Pinewood.DMSSample.Business.Models;
 using Pinewood.DMSSample.Business.Models.Responses;
 using Pinewood.DMSSample.Business.Repositories;
-using Pinewood.DMSSample.Business.Repositories.Concretes;
 using Pinewood.DMSSample.Business.Services;
 using Pinewood.DMSSample.Business.Services.Concretes;
 
-namespace Pinewood.DMSSample.Test;
+namespace Pinewood.DMSSample.Test.Services;
 
 public class PartInvoiceServicesTest
 {
@@ -32,7 +31,7 @@ public class PartInvoiceServicesTest
         var quantity = 10;
         var customerName = "John Doe";
         
-        //Action
+        //Act
         var result = _partInvoiceServices.CreatePartInvoiceAsync(stockCode, quantity, customerName)
             .Result;
         
@@ -49,7 +48,7 @@ public class PartInvoiceServicesTest
         var quantity = 0;
         var customerName = "John Doe";
         
-        //Action
+        //Act
         var result = _partInvoiceServices.CreatePartInvoiceAsync(stockCode, quantity, customerName)
             .Result;
         
@@ -68,7 +67,7 @@ public class PartInvoiceServicesTest
         var customer = new Customer(0, customerName, "address");
         _customerRepositoryDb.Setup(r => r.GetByName(customerName)).Returns(customer);
         
-        //Action
+        //Act
         var result = _partInvoiceServices.CreatePartInvoiceAsync(stockCode, quantity, customerName)
             .Result;
         
@@ -86,9 +85,9 @@ public class PartInvoiceServicesTest
         var customerName = "John Doe";
         var customer = new Customer(1, customerName, "address");
         _customerRepositoryDb.Setup(r => r.GetByName(customerName)).Returns(customer);
-        _partAvailabilityClient.Setup(c => c.GetAvailability(stockCode)).Returns(Task.FromResult(0));
+        _partAvailabilityClient.Setup(c => c.GetAvailability(stockCode)).ReturnsAsync(0);
         
-        //Action
+        //Act
         var result = _partInvoiceServices.CreatePartInvoiceAsync(stockCode, quantity, customerName)
             .Result;
         
@@ -106,9 +105,9 @@ public class PartInvoiceServicesTest
         var customerName = "John Doe";
         var customer = new Customer(1, customerName, "address");
         _customerRepositoryDb.Setup(r => r.GetByName(customerName)).Returns(customer);
-        _partAvailabilityClient.Setup(c => c.GetAvailability(stockCode)).Returns(Task.FromResult(1));
+        _partAvailabilityClient.Setup(c => c.GetAvailability(stockCode)).ReturnsAsync(1);
         
-        //Action
+        //Act
         var result = _partInvoiceServices.CreatePartInvoiceAsync(stockCode, quantity, customerName)
             .Result;
         
